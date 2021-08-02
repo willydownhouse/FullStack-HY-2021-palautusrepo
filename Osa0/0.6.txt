@@ -1,0 +1,7 @@
+Tehtävä 0.6: Uusi muistiinpano
+
+1. Selain -> Palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+        Pyynnön mukana JSON muodossa uusi muistiinpano.
+2. Palvelin vastaa pyyntöön koodilla 201 created.
+
+Selain pysyy samalla sivulla.

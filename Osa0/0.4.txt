@@ -1,0 +1,19 @@
+Tehtävä 0.4 Uusi muistiinpano
+
+1. Selain -> Palvelin : HTTP POST osoitteeseen: https://studies.cs.helsinki.fi/exampleapp/new_note
+2. Palvelin vastaa pyyntöön koodilla 302 (redirect eli uudelleenohjaus) -> Palvelin kehottaa selainta tekemään uuden HTTP GET pyynnön "endpointtiin" /exampleapp/notes.
+3. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+4. Palvelin -> Selain: HTML tiedosto
+5. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+6. Palvelin -> Selain: CSS tiedosto (main.css)
+7. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+8. Palvelin -> Selain: JS tiedosto (main.js)
+
+        Selain alkaa suorittamaan JavaScript koodia.
+
+        9. Selain -> Palvelin: HTTP https://studies.cs.helsinki.fi/exampleapp/data.json
+        10. Palvelin -> Selain: Lähettää mustiinpanot JSON tiedostona.
+
+        Selain suorittaa JavaScript koodissa olevan tapahtumakäsittelijän ja muistiinpanot ilmestyvät ruudulle.
+
+

@@ -1,0 +1,15 @@
+Tehtävä 0.5: Single Page App
+
+1. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+2. Palvelin -> Selain: HTML tiedosto
+3. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+4. Palvelin -> Selain: CSS tiedosto (main.css)
+5. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+6. Palvelin -> Selain: JavaScript tiedosto (spa.js)
+
+    Selain alkaa suorittamaan JavaScript koodia tiedostosta spa.js.
+
+    7. Selain -> Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    8. Palvelin -> Selain: Muistiinpanot JSON tiedostona.
+
+    Selain suorittaa JavaScript koodissa olevan tapahtumakäsittelijän ja muistiinpanot ilmestyvät ruudulle.
