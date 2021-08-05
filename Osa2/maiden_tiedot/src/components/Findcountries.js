@@ -5,7 +5,7 @@ const Findcountries = props => {
 
   return (
     <div className="content">
-      <div className="ui header">Find countries</div>
+      <h1 className="ui header">Find countries</h1>
       <div className="ui input">
         <input
           value={inputValue}

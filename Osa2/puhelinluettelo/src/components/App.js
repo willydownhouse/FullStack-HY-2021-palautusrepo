@@ -1,39 +1,37 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
+import Notification from "./Notification";
 import FilterNames from "./FilterNames";
 import AddNewPersonForm from "./AddNewPersonForm";
-import Numbers from "./Numbers";
+import PhoneNumberList from "./PhoneNumberList";
+import phoneService from "../services/PhoneNumbers";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [phoneBook, setPhoneBook] = useState([]);
   const [newName, setNewName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((res) => {
-      setPersons(res.data);
-    });
+    phoneService
+      .getAll()
+      .then((numbers) => {
+        setPhoneBook(numbers);
+      })
+      .catch((err) => {
+        setErrorMessage(err.message);
+
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
   }, []);
-
-  const onFormSubmit = (e) => {
-    e.preventDefault();
-
-    if (!persons.map((person) => person.name).includes(newName)) {
-      setPersons([...persons, { name: newName, number: phoneNumber }]);
-      setNewName("");
-      setPhoneNumber("");
-      return;
-    }
-
-    alert(`${newName} is already in phonebook`);
-    console.log(persons);
-  };
 
   return (
     <div className="ui container">
-      <h2>Phonebook</h2>
+      <h1 className="ui header">Phonebook</h1>
 
       <FilterNames
         placeholder="Filter names..."
@@ -42,14 +40,24 @@ const App = () => {
       />
 
       <AddNewPersonForm
-        onFormSubmit={onFormSubmit}
+        phoneBook={phoneBook}
+        setPhoneBook={setPhoneBook}
         newName={newName}
         setNewName={setNewName}
         phoneNumber={phoneNumber}
         setPhoneNumber={setPhoneNumber}
+        setErrorMessage={setErrorMessage}
+        setSuccessMessage={setSuccessMessage}
       />
+      <Notification message={successMessage} errorMessage={errorMessage} />
 
-      <Numbers title="Numbers" filter={filter} persons={persons} />
+      <PhoneNumberList
+        title="Numbers"
+        filter={filter}
+        phoneBook={phoneBook}
+        setPhoneBook={setPhoneBook}
+        setSuccessMessage={setSuccessMessage}
+      />
     </div>
   );
 };
