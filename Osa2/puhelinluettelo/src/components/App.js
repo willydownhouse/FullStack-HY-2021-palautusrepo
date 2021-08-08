@@ -18,7 +18,7 @@ const App = () => {
     phoneService
       .getAll()
       .then((numbers) => {
-        setPhoneBook(numbers);
+        setPhoneBook(numbers.data);
       })
       .catch((err) => {
         setErrorMessage(err.message);

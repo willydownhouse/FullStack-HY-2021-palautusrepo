@@ -21,7 +21,7 @@ const AddNewPersonForm = (props) => {
       phoneService
         .create({ name: newName, number: phoneNumber })
         .then((newPhoneNumber) => {
-          setPhoneBook(phoneBook.concat(newPhoneNumber));
+          setPhoneBook(phoneBook.concat(newPhoneNumber.data));
           setSuccessMessage("New number created succesfully!");
 
           setTimeout(() => {
@@ -57,7 +57,9 @@ const AddNewPersonForm = (props) => {
         })
         .then((updatedObj) => {
           setPhoneBook(
-            phoneBook.map((ob) => (ob.id !== updatedObj.id ? ob : updatedObj))
+            phoneBook.map((ob) =>
+              ob.id !== updatedObj.data.id ? ob : updatedObj.data
+            )
           );
 
           setSuccessMessage("Number updated succesfully!");
