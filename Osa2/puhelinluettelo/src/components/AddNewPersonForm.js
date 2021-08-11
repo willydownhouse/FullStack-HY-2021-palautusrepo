@@ -29,10 +29,14 @@ const AddNewPersonForm = (props) => {
           }, 5000);
         })
         .catch((err) => {
-          console.log(err);
-          setErrorMessage(
-            `Couldnt add ${newName} to the phonebook, please try again!`
-          );
+          console.log(err.response.data);
+          if (err.response.data.message) {
+            setErrorMessage(err.response.data.message);
+          } else {
+            setErrorMessage(
+              `Couldnt add ${newName} to the phonebook, please try again!`
+            );
+          }
 
           setTimeout(() => {
             setErrorMessage(null);
@@ -51,14 +55,14 @@ const AddNewPersonForm = (props) => {
       const currentObj = phoneBook.find((ob) => ob.name === newName);
 
       phoneService
-        .update(currentObj.id, {
+        .update(currentObj._id, {
           name: newName,
           number: phoneNumber,
         })
         .then((updatedObj) => {
           setPhoneBook(
             phoneBook.map((ob) =>
-              ob.id !== updatedObj.data.id ? ob : updatedObj.data
+              ob._id !== updatedObj.data._id ? ob : updatedObj.data
             )
           );
 
@@ -69,10 +73,14 @@ const AddNewPersonForm = (props) => {
           }, 5000);
         })
         .catch((err) => {
-          console.log(err);
-          setErrorMessage(
-            `Couldnt update ${newName}s number, please try again!`
-          );
+          console.log(err.response.data);
+          if (err.response.data.message) {
+            setErrorMessage(err.response.data.message);
+          } else {
+            setErrorMessage(
+              `Couldnt update ${newName}s number, please try again!`
+            );
+          }
 
           setTimeout(() => {
             setErrorMessage(null);

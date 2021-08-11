@@ -15,8 +15,8 @@ const PhoneNumberList = ({
         `Are you sure you want to delete ${person.name} from phonebook?`
       )
     ) {
-      phoneService.deleteOne(person.id);
-      setPhoneBook(phoneBook.filter((item) => item.id !== person.id));
+      phoneService.deleteOne(person._id);
+      setPhoneBook(phoneBook.filter((item) => item._id !== person._id));
       setSuccessMessage("Number deleted succesfully!");
 
       setTimeout(() => {
