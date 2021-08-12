@@ -9,11 +9,22 @@ const blogSchema = mongoose.Schema({
     type: String,
     required: [true, 'Blog must have an author'],
   },
-  url: String,
+  url: {
+    type: String,
+    required: [true, 'Blog must have url'],
+  },
   likes: {
     type: Number,
     default: 0,
   },
+});
+
+blogSchema.virtual('id').get(function () {
+  return this._id.toHexString();
+});
+
+blogSchema.set('toJSON', {
+  virtuals: true,
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
