@@ -10,7 +10,7 @@ beforeEach(async () => {
   await User.insertMany(helper.initialUsers);
 });
 
-describe('No users with wrong data and OK error messages', () => {
+describe('Dont create users with wrong data and OK error messages', () => {
   test('Username less than 3 characters', async () => {
     const newUser = {
       username: 'sa',
@@ -66,6 +66,16 @@ describe('No users with wrong data and OK error messages', () => {
     const res = await api.get('/api/users');
 
     expect(res.body.users).toHaveLength(helper.initialUsers.length + 1);
+  });
+});
+
+describe('Login OK', () => {
+  test('failure if no username and password -> 400', async () => {
+    const reqBody = {};
+
+    const res = await api.post('/api/users/login', reqBody).expect(400);
+
+    expect(res.body.message).toBe('Please enter username and password');
   });
 });
 

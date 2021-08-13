@@ -13,8 +13,6 @@ const unknownEndpoint = (request, response) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-  console.log(err);
-
   if (err.name === 'CastError') {
     return res.status(400).json({
       status: 'error',
@@ -25,7 +23,17 @@ const errorHandler = (err, req, res, next) => {
       status: 'error',
       message: err.message,
     });
+  } else if (err.name === 'JsonWebTokenError') {
+    return res.status(401).json({
+      error: 'invalid token',
+    });
+  } else if (err.name === 'TokenExpiredError') {
+    return res.status(401).json({
+      error: 'token expired',
+    });
   }
+
+  logger.error(err.message);
 
   next(err);
 };

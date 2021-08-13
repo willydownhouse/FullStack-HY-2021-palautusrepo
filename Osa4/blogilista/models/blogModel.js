@@ -9,6 +9,10 @@ const blogSchema = mongoose.Schema({
     type: String,
     required: [true, 'Blog must have an author'],
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   url: {
     type: String,
     required: [true, 'Blog must have url'],
@@ -19,12 +23,20 @@ const blogSchema = mongoose.Schema({
   },
 });
 
-blogSchema.virtual('id').get(function () {
-  return this._id.toHexString();
-});
+// blogSchema.virtual('id').get(function () {
+//   return this._id.toHexString();
+// });
+
+// blogSchema.set('toJSON', {
+//   virtuals: true,
+// });
 
 blogSchema.set('toJSON', {
-  virtuals: true,
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
 });
 
 const Blog = mongoose.model('Blog', blogSchema);

@@ -1,17 +1,20 @@
 const express = require('express');
 const blogController = require('../controllers/blogController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(blogController.getAllBlogs)
-  .post(blogController.createBlog);
+  .post(authController.checkIfLoggedIn, blogController.createBlog);
 
 router
   .route('/:id')
   .get(blogController.getOneBlog)
   .patch(blogController.updateBlog)
-  .delete(blogController.deleteBlog);
+  .delete(authController.checkIfLoggedIn, blogController.deleteBlog);
+
+router.route('/').post(blogController.createBlog);
 
 module.exports = router;

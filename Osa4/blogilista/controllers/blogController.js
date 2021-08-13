@@ -1,7 +1,7 @@
 const Blog = require('../models/blogModel');
 
 exports.getAllBlogs = async (req, res, next) => {
-  const data = await Blog.find();
+  const data = await Blog.find().populate('user', { id: 1, username: 1 });
 
   res.status(200).json({
     status: 'success',
@@ -27,7 +27,9 @@ exports.getOneBlog = async (req, res) => {
 };
 
 exports.createBlog = async (req, res) => {
-  const newBlog = await Blog.create(req.body);
+  console.log(req.user);
+
+  const newBlog = await Blog.create({ ...req.body, user: req.user._id });
 
   res.status(201).json({
     status: 'success',
@@ -36,12 +38,21 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.deleteBlog = async (req, res) => {
-  const blog = await Blog.findByIdAndDelete(req.params.id);
+  const blog = await Blog.findById(req.params.id);
 
   if (!blog) {
     return res.status(400).json({
       status: 'fail',
       message: 'No document with that ID',
+    });
+  }
+
+  if (req.user._id.toString() === blog.user._id.toString()) {
+    await Blog.findByIdAndDelete(req.params.id);
+  } else {
+    return res.status(401).json({
+      status: 'error',
+      message: 'You are not allowed to execute this  action',
     });
   }
 

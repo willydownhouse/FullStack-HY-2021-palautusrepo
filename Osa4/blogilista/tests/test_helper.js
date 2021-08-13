@@ -1,13 +1,15 @@
+const mongoose = require('mongoose');
+
 const initialBlogs = [
   {
-    title: 'my blog',
-    author: 'willydownhouse',
+    title: 'blog 1',
+    author: 'james',
     url: 'dadas',
   },
   {
-    title: 'mtb school',
-    author: 'keijo 77',
-    url: 'adas',
+    title: 'haloo lyngen',
+    author: 'hamr',
+    url: 'dadas',
   },
 ];
 const initialUsers = [
