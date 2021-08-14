@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//
+
 const initialBlogs = [
   {
     title: 'blog 1',
@@ -7,7 +9,7 @@ const initialBlogs = [
     url: 'dadas',
   },
   {
-    title: 'haloo lyngen',
+    title: 'blog 2',
     author: 'hamr',
     url: 'dadas',
   },

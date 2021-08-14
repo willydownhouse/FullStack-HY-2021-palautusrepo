@@ -27,8 +27,6 @@ exports.getOneBlog = async (req, res) => {
 };
 
 exports.createBlog = async (req, res) => {
-  console.log(req.user);
-
   const newBlog = await Blog.create({ ...req.body, user: req.user._id });
 
   res.status(201).json({
