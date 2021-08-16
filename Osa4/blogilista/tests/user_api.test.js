@@ -33,8 +33,6 @@ describe('Dont create users with wrong data and OK error messages', () => {
 
     const res = await api.post('/api/users').send(newUser).expect(400);
 
-    console.log(res.body);
-
     expect(res.body.status).toBe('error');
     expect(res.body.message).toBe(
       'User validation failed: password: Path `password` (`te`) is shorter than the minimum allowed length (3).'

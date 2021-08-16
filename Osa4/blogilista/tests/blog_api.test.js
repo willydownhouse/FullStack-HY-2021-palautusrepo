@@ -6,10 +6,6 @@ const api = supertest(app);
 const Blog = require('../models/blogModel');
 const User = require('../models/userModel');
 
-// beforeEach(() => {
-//   jest.setTimeout(8000);
-// });
-
 beforeAll(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogs);
@@ -50,26 +46,26 @@ describe('blog has a field named id', () => {
   });
 });
 //tästä herjaa että kestää liian pitkään vaikka tulos OK! Exceeded timeout of 5000 ms for a test
-// describe('valid new blog is added', () => {
-//   test('bloglist length grows by 1', async req => {
-//     const newBlog = {
-//       title: 'Blog 3',
-//       author: 'bond',
-//       url: 'dsda',
-//     };
+describe('valid new blog is added', () => {
+  test('bloglist length grows by 1', async req => {
+    const newBlog = {
+      title: 'Blog 3',
+      author: 'bond',
+      url: 'dsda',
+    };
 
-//     await api
-//       .post('/api/blogs')
-//       .set('Content-type', 'application/json')
-//       .set('Authorization', `Bearer ${token}`)
-//       .send(newBlog)
-//       .expect(201);
+    await api
+      .post('/api/blogs')
+      .set('Content-type', 'application/json')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201);
 
-//     const res = await api.get('/api/blogs');
+    const res = await api.get('/api/blogs');
 
-//     expect(res.body.data.length).toBe(helper.initialBlogs.length + 1);
-//   });
-// });
+    expect(res.body.data.length).toBe(helper.initialBlogs.length + 1);
+  });
+});
 
 describe('if blog has no likes field -> default it to 0', () => {
   test('expect 201 and likes field is defined', async () => {
@@ -144,5 +140,4 @@ describe('delete a blog', () => {
 
 afterAll(() => {
   mongoose.connection.close();
-  //jest.clearAllTimers();
 });

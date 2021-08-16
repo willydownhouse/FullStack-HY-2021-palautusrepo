@@ -23,14 +23,6 @@ const blogSchema = mongoose.Schema({
   },
 });
 
-// blogSchema.virtual('id').get(function () {
-//   return this._id.toHexString();
-// });
-
-// blogSchema.set('toJSON', {
-//   virtuals: true,
-// });
-
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
