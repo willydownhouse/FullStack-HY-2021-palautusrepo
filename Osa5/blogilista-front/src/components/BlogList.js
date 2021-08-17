@@ -4,17 +4,33 @@ import { useEffect } from 'react';
 import blogsApi from '../apis/blogsApi';
 import BlogItem from './BlogItem';
 
-const BlogList = ({ blogs, setBlogs }) => {
+const BlogList = ({
+  blogs,
+  setBlogs,
+  user,
+  setNotification,
+  setErrMessage,
+}) => {
   useEffect(() => {
     blogsApi.get('/api/blogs').then(res => {
+      setBlogs(res.data.data.sort((a, b) => b.likes - a.likes));
       console.log(res.data.data);
-      setBlogs(res.data.data);
     });
   }, []);
 
   const renderBlogs = () => {
     return blogs.map(blog => {
-      return <BlogItem key={blog.id} blog={blog} />;
+      return (
+        <BlogItem
+          setErrMessage={setErrMessage}
+          setNotification={setNotification}
+          key={blog.id}
+          user={user}
+          blog={blog}
+          blogs={blogs}
+          setBlogs={setBlogs}
+        />
+      );
     });
   };
 

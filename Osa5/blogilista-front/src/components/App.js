@@ -15,32 +15,40 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    console.log(user);
 
     if (!user) return;
 
-    setUser(user.split(','));
+    setUser(user);
   }, []);
 
   return (
     <div className="ui container">
       {user ? (
         <>
-          <Header user={user[1]} setUser={setUser} />
-          <Togglable btnLabel="Create new blog">
+          <Header user={user.user} setUser={setUser} />
+          <Togglable btnLabel1="Create new blog" btnLabel2="Cancel">
             <CreateBlog
               setNotification={setNotification}
               setErrMessage={setErrMessage}
               blogs={blogs}
               setBlogs={setBlogs}
-              token={user[2]}
+              token={user.token}
             />
           </Togglable>
 
           {errMessage || notification ? (
             <Notification errMessage={errMessage} message={notification} />
           ) : null}
-          <BlogList blogs={blogs} setBlogs={setBlogs} />
+          <BlogList
+            setErrMessage={setErrMessage}
+            setNotification={setNotification}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            user={user}
+          />
         </>
       ) : (
         <>

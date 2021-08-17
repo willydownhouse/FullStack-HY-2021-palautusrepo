@@ -17,10 +17,8 @@ const LoginForm = ({ setUser, setErrMessage }) => {
       .then(res => {
         console.log(res.data);
 
-        const loggedInUser = Object.values(res.data);
-
-        setUser(loggedInUser);
-        localStorage.setItem('user', loggedInUser);
+        setUser(res.data);
+        localStorage.setItem('user', JSON.stringify(res.data));
       })
       .catch(err => {
         setErrMessage(err.response.data.message);

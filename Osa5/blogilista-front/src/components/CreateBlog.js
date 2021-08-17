@@ -35,6 +35,11 @@ const CreateBlog = ({
         setBlogs([...blogs, res.data.newBlog]);
         setNotification(`${res.data.newBlog.title} added to the blogs list.
         `);
+
+        setTitle('');
+        setAuthor('');
+        setUrl('');
+
         setTimeout(() => {
           setNotification(null);
           setVisible(false);
@@ -44,10 +49,6 @@ const CreateBlog = ({
         setErrMessage(err.response.data.message);
         setTimeout(() => setErrMessage(null), 5000);
       });
-
-    setTitle('');
-    setAuthor('');
-    setUrl('');
   };
   return (
     <>
