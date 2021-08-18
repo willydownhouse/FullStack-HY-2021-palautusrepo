@@ -37,7 +37,10 @@ describe('Tehtävä 5.13', () => {
     const component = render(
       <BlogItem blogs={blogs} user={user} blog={blog} />
     );
-    expect(component.container).toHaveTextContent('willy');
+
+    const element = component.container.querySelector('#author');
+
+    expect(element.textContent).toBe('Author: willy');
   });
 
   test('Component renders title', () => {
@@ -46,18 +49,16 @@ describe('Tehtävä 5.13', () => {
     );
     const element = component.container.querySelector('.ui.header');
 
-    expect(element).toHaveTextContent('Haloo Lyngen');
+    expect(element.textContent).toBe('Haloo Lyngen');
   });
 
   test('Component not render url and likes', () => {
     const component = render(
       <BlogItem blogs={blogs} user={user} blog={blog} />
     );
-
     const div = component.container.querySelector('.meta');
 
     expect(div).toHaveStyle('display: none');
-    expect(div).toHaveTextContent('www.ert.fi');
   });
 });
 
@@ -67,11 +68,32 @@ describe('Tehtävä 5.14', () => {
       <BlogItem blogs={blogs} user={user} blog={blog} />
     );
 
-    const button = component.getByText('Show');
+    const button = component.container.querySelector('#btnShow');
     fireEvent.click(button);
 
     const div = component.container.querySelector('.meta');
 
     expect(div).not.toHaveStyle('display: none');
+  });
+});
+
+describe('Tehtävä 5.15', () => {
+  test('like button clicked twice -> callBack called twice', async () => {
+    const onClick = jest.fn();
+
+    const component = render(
+      <i
+        id="btnLike"
+        onClick={onClick}
+        className="thumbs up icon large"
+        style={{ cursor: 'pointer' }}
+      ></i>
+    );
+    const btnLikes = component.container.querySelector('#btnLike');
+
+    fireEvent.click(btnLikes);
+    fireEvent.click(btnLikes);
+
+    expect(onClick).toHaveBeenCalledTimes(2);
   });
 });

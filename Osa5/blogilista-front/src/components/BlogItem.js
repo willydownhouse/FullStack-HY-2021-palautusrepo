@@ -43,6 +43,7 @@ const BlogItem = ({
     <div key={blog.id} className="item">
       <div className="right floated content">
         <button
+          id="btnShow"
           onClick={() => setShowDetails(!showDetails)}
           className="ui button"
         >
@@ -57,18 +58,23 @@ const BlogItem = ({
       <div className="content">
         <div className="header">
           <h2 className="ui header">{blog.title}</h2>
-          <p style={{ marginBottom: '4px' }}>Author: {blog.author}</p>
+          <p id="author" style={{ marginBottom: '4px' }}>
+            Author: {blog.author}
+          </p>
         </div>
 
         <div
           className="meta"
           style={showDetails ? { display: '' } : { display: 'none' }}
         >
-          <span className="ui label">Likes: {likes}</span>
+          <span id="likes" className="ui label">
+            Likes: {likes}
+          </span>
           <span className="ui label">Added: {blog.user.username}</span>
           <span className="ui label">Url: {blog.url}</span>
 
           <i
+            id="btnLike"
             onClick={() => addLikes()}
             className="thumbs up icon large"
             style={{ cursor: 'pointer' }}

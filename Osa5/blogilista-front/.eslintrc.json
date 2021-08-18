@@ -1,12 +1,31 @@
 {
   "parser": "@babel/eslint-parser",
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2017
+    "ecmaVersion": 2020,
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
   },
+  "plugins": ["react", "jest"],
 
   "env": {
     "es6": true
+    /* "jest/globals": true */
+  },
+  "rules": {
+    "no-unused-vars": "off",
+    "no-undef": "off",
+    "react/prop-types": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
