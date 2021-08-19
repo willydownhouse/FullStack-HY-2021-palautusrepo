@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import blogsApi from '../apis/blogsApi';
+import CreateBlogForm from './CreateBlogForm';
 
 const CreateBlog = ({
   token,
@@ -46,49 +47,28 @@ const CreateBlog = ({
         }, 2500);
       })
       .catch(err => {
-        setErrMessage(err.response.data.message);
+        err.response.data.error
+          ? setErrMessage(err.response.data.error)
+          : setErrMessage(err.response.data.message);
         setTimeout(() => setErrMessage(null), 5000);
       });
   };
   return (
     <>
       <h1 className="ui header">Create a new blog</h1>
-
-      <form onSubmit={onFormSubmit} className="ui form">
-        <div className="field">
-          <label>Title</label>
-          <input
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            type="text"
-            name="title"
-            placeholder="Title"
-          />
-        </div>
-        <div className="field">
-          <label>Author</label>
-          <input
-            value={author}
-            onChange={e => setAuthor(e.target.value)}
-            type="text"
-            name="author"
-            placeholder="Author"
-          />
-        </div>
-        <div className="field">
-          <label>Url</label>
-          <input
-            value={url}
-            onChange={e => setUrl(e.target.value)}
-            type="text"
-            name="url"
-            placeholder="url"
-          />
-        </div>
-        <button className="ui button" type="submit">
-          Submit
-        </button>
-      </form>
+      <CreateBlogForm
+        label1="Title"
+        label2="Author"
+        label3="Url"
+        btnLabel="Submit"
+        title={title}
+        setTitle={setTitle}
+        author={author}
+        setAuthor={setAuthor}
+        url={url}
+        setUrl={setUrl}
+        onFormSubmit={onFormSubmit}
+      />
       <div className="ui hidden divider"></div>
     </>
   );

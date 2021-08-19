@@ -1,4 +1,5 @@
 import React from 'react';
+
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 
@@ -33,31 +34,24 @@ const blog = {
 };
 
 describe('Tehtävä 5.13', () => {
-  test('Component renders author', () => {
-    const component = render(
-      <BlogItem blogs={blogs} user={user} blog={blog} />
-    );
+  let component;
+  beforeEach(() => {
+    component = render(<BlogItem blogs={blogs} user={user} blog={blog} />);
+  });
 
+  test('Component renders author', () => {
     const element = component.container.querySelector('#author');
 
     expect(element.textContent).toBe('Author: willy');
   });
 
   test('Component renders title', () => {
-    const component = render(
-      <BlogItem blogs={blogs} user={user} blog={blog} />
-    );
     const element = component.container.querySelector('.ui.header');
-
     expect(element.textContent).toBe('Haloo Lyngen');
   });
 
   test('Component not render url and likes', () => {
-    const component = render(
-      <BlogItem blogs={blogs} user={user} blog={blog} />
-    );
     const div = component.container.querySelector('.meta');
-
     expect(div).toHaveStyle('display: none');
   });
 });

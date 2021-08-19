@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import blogsApi from '../apis/blogsApi';
 import BlogItem from './BlogItem';
-
+//@babel/preset-react
 const BlogList = ({
   blogs,
   setBlogs,

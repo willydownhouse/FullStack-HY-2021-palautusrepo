@@ -14,9 +14,14 @@ const BlogItem = ({
   const [likes, setLikes] = useState(blog.likes);
 
   const addLikes = () => {
-    blogsApi.patch(`/api/blogs/${blog.id}`, { likes: likes + 1 }).then(res => {
-      setLikes(res.data.data.likes);
-    });
+    blogsApi
+      .patch(`/api/blogs/${blog.id}`, { likes: likes + 1 })
+      .then(res => {
+        setLikes(res.data.data.likes);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
   };
 
   const handleDelete = () => {
