@@ -15,6 +15,7 @@
   "plugins": ["react", "jest"],
 
   "env": {
+    "browser": true,
     "es6": true
     /* "jest/globals": true */
   },

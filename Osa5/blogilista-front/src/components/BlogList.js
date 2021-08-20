@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import blogsApi from '../apis/blogsApi';
 import BlogItem from './BlogItem';
-//@babel/preset-react
+
 const BlogList = ({
   blogs,
   setBlogs,
@@ -12,16 +12,22 @@ const BlogList = ({
   setErrMessage,
 }) => {
   useEffect(() => {
-    blogsApi.get('/api/blogs').then(res => {
-      setBlogs(res.data.data.sort((a, b) => b.likes - a.likes));
-      console.log(res.data.data);
-    });
+    blogsApi
+      .get('/api/blogs')
+      .then(res => {
+        setBlogs(res.data.data.sort((a, b) => b.likes - a.likes));
+        console.log(res.data.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
 
   const renderBlogs = () => {
-    return blogs.map(blog => {
+    return blogs.map((blog, i) => {
       return (
         <BlogItem
+          index={i}
           setErrMessage={setErrMessage}
           setNotification={setNotification}
           key={blog.id}
@@ -37,7 +43,9 @@ const BlogList = ({
   return (
     <div>
       <h1 className="ui header">Blogs</h1>
-      <div className="ui very relaxed list">{renderBlogs()}</div>
+      <div id="blogList" className="ui very relaxed list">
+        {renderBlogs()}
+      </div>
     </div>
   );
 };

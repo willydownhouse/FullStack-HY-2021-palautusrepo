@@ -48,7 +48,7 @@ const CreateBlogForm = ({
           placeholder="url"
         />
       </div>
-      <button className="ui button" type="submit">
+      <button id="btnCreateBlogSubmit" className="ui button" type="submit">
         {btnLabel}
       </button>
     </form>

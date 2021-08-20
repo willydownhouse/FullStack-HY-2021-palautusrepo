@@ -7,6 +7,7 @@ require('express-async-errors');
 
 const blogRouter = require('./routes/blogRoutes');
 const userRouter = require('./routes/userRoutes');
+const testRouter = require('./routes/testRoutes');
 const middleware = require('./utils/middleware');
 
 const app = express();
@@ -39,6 +40,10 @@ app.use(cors());
 
 app.use('/api/blogs', blogRouter);
 app.use('/api/users', userRouter);
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', testRouter);
+}
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

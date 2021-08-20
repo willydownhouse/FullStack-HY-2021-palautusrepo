@@ -35,6 +35,7 @@ const LoginForm = ({ setUser, setErrMessage }) => {
         <div className="field">
           <label>Username</label>
           <input
+            id="username"
             value={userNameInput}
             onChange={e => setUserNameInput(e.target.value)}
             type="text"
@@ -43,12 +44,13 @@ const LoginForm = ({ setUser, setErrMessage }) => {
         <div className="field">
           <label>Password</label>
           <input
+            id="password"
             value={passwordInput}
             onChange={e => setPasswordInput(e.target.value)}
             type="text"
           />
         </div>
-        <button className="ui button" type="submit">
+        <button id="btnLogin" className="ui button" type="submit">
           Login
         </button>
       </form>

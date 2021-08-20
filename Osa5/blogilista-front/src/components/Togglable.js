@@ -14,7 +14,11 @@ const Togglable = ({ btnLabel1, btnLabel2, children }) => {
           </div>
         </>
       ) : (
-        <div onClick={() => setVisible(!visible)} className="ui button">
+        <div
+          id="btnCreateBlog"
+          onClick={() => setVisible(!visible)}
+          className="ui button"
+        >
           {btnLabel1}
         </div>
       )}

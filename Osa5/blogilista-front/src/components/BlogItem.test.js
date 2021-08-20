@@ -57,12 +57,12 @@ describe('Tehtävä 5.13', () => {
 });
 
 describe('Tehtävä 5.14', () => {
-  test('Component render url likes after button click', () => {
+  test('Component render url and likes after button click', () => {
     const component = render(
-      <BlogItem blogs={blogs} user={user} blog={blog} />
+      <BlogItem index="0" blogs={blogs} user={user} blog={blog} />
     );
 
-    const button = component.container.querySelector('#btnShow');
+    const button = component.container.querySelector('#btnShow0');
     fireEvent.click(button);
 
     const div = component.container.querySelector('.meta');
@@ -77,13 +77,13 @@ describe('Tehtävä 5.15', () => {
 
     const component = render(
       <i
-        id="btnLike"
+        id="btnLike0"
         onClick={onClick}
         className="thumbs up icon large"
         style={{ cursor: 'pointer' }}
       ></i>
     );
-    const btnLikes = component.container.querySelector('#btnLike');
+    const btnLikes = component.container.querySelector('#btnLike0');
 
     fireEvent.click(btnLikes);
     fireEvent.click(btnLikes);
