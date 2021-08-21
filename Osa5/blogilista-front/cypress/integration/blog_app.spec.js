@@ -14,6 +14,7 @@ describe('Blog App', () => {
     cy.contains('Log in to application');
   });
 
+  //LOGIN
   describe('Login', function () {
     it('Login succeeded with correct credentials', () => {
       cy.get('#username').type('keke');
@@ -48,14 +49,14 @@ describe('Blog App', () => {
       cy.contains('Please enter username and password');
     });
     it('Notification color is red after failed loggin', function () {
-      cy.intercept('http://localhost:3001/api/users/login').as('login');
+      cy.intercept('http://localhost:3001/api/users/login').as('Login');
 
       cy.get('#username');
       cy.get('#password');
 
       cy.contains('Login').click();
 
-      cy.wait(['@login']);
+      cy.wait(['@Login']);
 
       cy.get('#notification')
         .invoke('attr', 'class')
@@ -63,12 +64,10 @@ describe('Blog App', () => {
     });
   });
 
+  //AFTER LOGGED IN
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.get('#username').type('keke');
-      cy.get('#password').type('test1234');
-
-      cy.contains('Login').click();
+      cy.login({ username: 'keke', password: 'test1234' });
     });
 
     it('A blog can be created', function () {
@@ -85,7 +84,6 @@ describe('Blog App', () => {
 
     it('A blog can be liked', function () {
       cy.get('#btnShow0').click();
-
       cy.get('#btnLike0').click();
 
       cy.get('#likes0').invoke('attr', 'value').should('eq', '3');
@@ -93,12 +91,28 @@ describe('Blog App', () => {
 
     it('A blog can be deleted', function () {
       cy.get('#btnDelete1').click();
-
       cy.contains('Blog 1').should('not.exist');
     });
 
     it('A blog DELETE button does not exist', function () {
       cy.get('#btnDelete0').should('not.exist');
+    });
+
+    it('Blogs in order based on likes', function () {
+      let likes1;
+      let likes2;
+      cy.get('#likes0')
+        .invoke('attr', 'value')
+        .then(val => {
+          likes1 = +val;
+        });
+      cy.get('#likes1')
+        .invoke('attr', 'value')
+        .then(val => {
+          likes2 = +val;
+
+          expect(likes1).to.be.greaterThan(likes2);
+        });
     });
   });
 });
