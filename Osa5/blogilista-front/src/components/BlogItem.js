@@ -45,8 +45,6 @@ const BlogItem = ({
     }
   };
 
-  console.log(blog);
-
   return (
     <div id={`blog${index}`} key={blog.id} className="item">
       <div className="right floated content">

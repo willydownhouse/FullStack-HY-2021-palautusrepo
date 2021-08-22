@@ -16,7 +16,6 @@ const BlogList = ({
       .get('/api/blogs')
       .then(res => {
         setBlogs(res.data.data.sort((a, b) => b.likes - a.likes));
-        console.log(res.data.data);
       })
       .catch(err => {
         console.log(err);
