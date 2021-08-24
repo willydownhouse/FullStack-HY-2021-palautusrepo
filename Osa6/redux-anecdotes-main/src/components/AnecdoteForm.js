@@ -1,23 +1,15 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { createAnecdote, showNotification, hideNotification } from "../actions";
+import { connect } from "react-redux";
+import { createAnecdote, showNotification } from "../actions";
 
 import { Typography, TextField, Button, Box } from "@material-ui/core";
 
-function AnecdoteForm(props) {
-  const dispatch = useDispatch();
-
+function AnecdoteForm({ createAnecdote, showNotification }) {
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createAnecdote(e.target.anecdote.value));
+    createAnecdote(e.target.anecdote.value);
 
-    dispatch(
-      showNotification(`You created anecdote: ${e.target.anecdote.value}`)
-    );
-
-    setTimeout(() => {
-      dispatch(hideNotification());
-    }, 5000);
+    showNotification(`You created anecdote: ${e.target.anecdote.value}`, 5);
 
     e.target.anecdote.value = "";
   };
@@ -47,4 +39,7 @@ function AnecdoteForm(props) {
   );
 }
 
-export default AnecdoteForm;
+export default connect(null, {
+  createAnecdote,
+  showNotification,
+})(AnecdoteForm);

@@ -1,13 +1,11 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
 import { filter } from "../actions";
-import { useDispatch } from "react-redux";
+import { connect } from "react-redux";
 
-function Filter(props) {
-  const dispatch = useDispatch();
-
+function Filter({ filter }) {
   const handleChange = (e) => {
-    dispatch(filter(e.target.value.toLowerCase()));
+    filter(e.target.value.toLowerCase());
   };
   return (
     <div>
@@ -24,4 +22,4 @@ function Filter(props) {
   );
 }
 
-export default Filter;
+export default connect(null, { filter })(Filter);

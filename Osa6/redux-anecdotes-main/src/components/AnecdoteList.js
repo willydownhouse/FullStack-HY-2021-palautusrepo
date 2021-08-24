@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { voteAnecdote, showNotification, hideNotification } from "../actions";
+import { voteAnecdote, showNotification } from "../actions";
 
 import { Typography, Button } from "@material-ui/core";
 
@@ -8,14 +8,10 @@ function AnecdoteList(props) {
   const anecdotes = useSelector((state) => state.anecdotes);
   const dispatch = useDispatch();
 
-  const vote = (id, content) => {
-    dispatch(voteAnecdote(id));
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote));
 
-    dispatch(showNotification(`You voted ${content}`));
-
-    setTimeout(() => {
-      dispatch(hideNotification());
-    }, 3000);
+    dispatch(showNotification(`You voted ${anecdote.content}`, 5));
   };
   return (
     <div>
@@ -30,7 +26,7 @@ function AnecdoteList(props) {
               variant="contained"
               size="small"
               style={{ marginLeft: "30px" }}
-              onClick={() => vote(anecdote.id, anecdote.content)}
+              onClick={() => vote(anecdote)}
             >
               vote
             </Button>
