@@ -1,11 +1,19 @@
 import anecdotesApi from "../apis/anecdotesApi";
 
-export const getAnecdotes = () => async (dispatch) => {
+export const getAnecdotes = () => async (dispatch, getState) => {
   const { data } = await anecdotesApi.get("/anecdotes");
+  const filter = getState().filter;
+
+  const list =
+    filter === ""
+      ? data
+      : data.filter((anecdote) =>
+          anecdote.content.toLowerCase().includes(filter)
+        );
 
   dispatch({
     type: "GET_ANECTODES",
-    data,
+    data: list,
   });
 };
 

@@ -6,6 +6,7 @@ import { Typography, Button } from "@material-ui/core";
 
 function AnecdoteList(props) {
   const anecdotes = useSelector((state) => state.anecdotes);
+
   const dispatch = useDispatch();
 
   const vote = (anecdote) => {
@@ -21,7 +22,7 @@ function AnecdoteList(props) {
             {anecdote.content}
           </Typography>
           <Typography variant="h6" display="block" gutterBottom>
-            has {anecdote.votes}
+            has {anecdote.votes} votes
             <Button
               variant="contained"
               size="small"

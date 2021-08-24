@@ -1,11 +1,12 @@
 import React from "react";
 import { TextField } from "@material-ui/core";
-import { filter } from "../actions";
+import { filter, getAnecdotes } from "../actions";
 import { connect } from "react-redux";
 
-function Filter({ filter }) {
+function Filter(props) {
   const handleChange = (e) => {
-    filter(e.target.value.toLowerCase());
+    props.filter(e.target.value.toLowerCase());
+    setTimeout(props.getAnecdotes, 1500);
   };
   return (
     <div>
@@ -22,4 +23,4 @@ function Filter({ filter }) {
   );
 }
 
-export default connect(null, { filter })(Filter);
+export default connect(null, { filter, getAnecdotes })(Filter);
