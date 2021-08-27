@@ -1,5 +1,12 @@
 import blogsApi from '../apis/blogsApi';
 
+export const setCurrentUserFromLocalStorage = loggedInUser => {
+  return {
+    type: 'SET_CURRENT_USER',
+    payload: loggedInUser,
+  };
+};
+
 export const login = (username, password) => async dispatch => {
   try {
     const res = await blogsApi.post('/api/users/login', {
@@ -8,7 +15,14 @@ export const login = (username, password) => async dispatch => {
     });
     console.log(res.data);
 
-    //localStorage.setItem('user', JSON.stringify(res.data));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        user: res.data.user,
+        userId: res.data.userId,
+        token: res.data.token,
+      })
+    );
 
     dispatch({
       type: 'LOG_IN',
@@ -24,7 +38,7 @@ export const login = (username, password) => async dispatch => {
   }
 };
 export const logOut = () => {
-  //localStorage.removeItem('user');
+  localStorage.removeItem('user');
   return {
     type: 'LOG_OUT',
   };
@@ -42,14 +56,26 @@ export const openForm = () => {
   };
 };
 
-export const getAllBlogs = () => async dispatch => {
-  const res = await blogsApi.get('/api/blogs');
-  const blogs = res.data.data.sort((a, b) => b.likes - a.likes);
+export const getAll = type => async dispatch => {
+  const res = await blogsApi.get(`/api/${type}`);
+  const docs =
+    type === 'blogs'
+      ? res.data.data.sort((a, b) => b.likes - a.likes)
+      : res.data.data;
 
-  dispatch({
-    type: 'GET_ALL_BLOGS',
-    payload: blogs,
-  });
+  if (type === 'blogs') {
+    dispatch({
+      type: 'GET_ALL_BLOGS',
+      payload: docs,
+    });
+  }
+
+  if (type === 'users') {
+    dispatch({
+      type: 'GET_ALL_USERS',
+      payload: docs,
+    });
+  }
 };
 
 export const createBlog = (data, token) => async dispatch => {
@@ -81,6 +107,17 @@ export const deleteBlog = (id, token) => async dispatch => {
   dispatch({
     type: 'DELETE_BLOG',
     payload: id,
+  });
+};
+
+export const likeABlog = (id, likes) => async dispatch => {
+  const res = await blogsApi.patch(`/api/blogs/${id}`, {
+    likes: likes + 1,
+  });
+
+  dispatch({
+    type: 'LIKE_A_BLOG',
+    payload: res.data.data,
   });
 };
 

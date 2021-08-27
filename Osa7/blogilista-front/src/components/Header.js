@@ -16,7 +16,7 @@ const Header = () => {
     <>
       <div className="ui secondary menu">
         <Link className="item" to="/">
-          Home
+          Blogs
         </Link>
         <Link className="item" to="/users">
           Users

@@ -2,15 +2,14 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getAllBlogs } from '../actions';
+import { getAll } from '../actions';
 import BlogItem from './BlogItem';
 
 const BlogList = ({ user }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('let s get blogs');
-    dispatch(getAllBlogs());
+    dispatch(getAll('blogs'));
   }, []);
 
   const blogs = useSelector(state => state.blogs);

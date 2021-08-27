@@ -6,6 +6,11 @@ const blogsReducer = (state = [], action) => {
       return [...state, action.payload];
     case 'DELETE_BLOG':
       return state.filter(blog => blog.id !== action.payload);
+    case 'LIKE_A_BLOG':
+      return state.map(blog =>
+        blog.id !== action.payload.id ? blog : action.payload
+      );
+
     default:
       return state;
   }

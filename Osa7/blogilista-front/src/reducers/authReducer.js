@@ -1,10 +1,17 @@
-const authReducer = (state = null, action) => {
+const initialState = {
+  isLoggedIn: false,
+};
+
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOG_IN':
-      return action.payload;
+      return { ...action.payload, isLoggedIn: true };
 
     case 'LOG_OUT':
-      return null;
+      return { isLoggedIn: false };
+
+    case 'SET_CURRENT_USER':
+      return { ...action.payload, isLoggedIn: true };
     default:
       return state;
   }

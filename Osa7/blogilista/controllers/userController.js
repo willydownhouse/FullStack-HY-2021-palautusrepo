@@ -9,7 +9,7 @@ exports.getAllUsers = async (req, res) => {
   res.status(200).json({
     status: 'success',
     docs: users.length,
-    users,
+    data: users,
   });
 };
 
@@ -25,5 +25,24 @@ exports.createUser = async (req, res) => {
   res.status(201).json({
     status: 'success',
     user,
+  });
+};
+
+exports.updateUser = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    runValidators: true,
+    new: true,
+  });
+
+  if (!user) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No document with that ID',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: user,
   });
 };
