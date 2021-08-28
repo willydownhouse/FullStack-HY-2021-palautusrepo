@@ -3,13 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { likeABlog } from '../actions';
 
+import AddCommentForm from './AddCommentForm';
+
 function BlogDetails(props) {
   const dispatch = useDispatch();
   const id = useParams().id;
   const blog = useSelector(state => state.blogs.find(blog => blog.id === id));
-
-  console.log(id);
-  console.log(blog);
 
   const addLikes = () => {
     dispatch(likeABlog(blog.id, blog.likes));
@@ -42,6 +41,18 @@ function BlogDetails(props) {
           className="thumbs up icon large"
           style={{ cursor: 'pointer' }}
         ></i>
+      </div>
+      <div className="ui hidden divider"></div>
+      <AddCommentForm id={blog.id} />
+      <div className="ui hidden divider"></div>
+
+      <div className="content">
+        <div className="ui header">Comments</div>
+        {blog.comments.length === 0
+          ? 'No comments for this blog yet'
+          : blog.comments.map((comment, i) => {
+              return <p key={i}>{comment}</p>;
+            })}
       </div>
     </div>
   );

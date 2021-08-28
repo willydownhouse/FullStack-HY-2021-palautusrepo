@@ -13,8 +13,6 @@ function AllUsers(props) {
     dispatch(getAll('users'));
   }, []);
 
-  console.log(users);
-
   const renderUsers = () => {
     return users.map(user => {
       return (

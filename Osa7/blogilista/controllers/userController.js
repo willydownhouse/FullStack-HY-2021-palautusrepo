@@ -46,3 +46,28 @@ exports.updateUser = async (req, res) => {
     data: user,
   });
 };
+
+exports.updateUserBlogsAfterBlogCreate = async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      blogs: [...req.user.blogs, req.blog._id],
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!user) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Could not find and update user after blog create.',
+    });
+  }
+
+  res.status(201).json({
+    status: 'success',
+    newBlog: req.blog,
+    user,
+  });
+};

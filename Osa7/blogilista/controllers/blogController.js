@@ -27,7 +27,7 @@ exports.getOneBlog = async (req, res) => {
   });
 };
 
-exports.createBlog = async (req, res) => {
+exports.createBlog = async (req, res, next) => {
   const newBlog = await Blog.create({
     title: req.body.title,
     author: req.body.author,
@@ -35,21 +35,9 @@ exports.createBlog = async (req, res) => {
     user: req.user._id,
   });
 
-  const user = await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      blogs: [...req.user.blogs, newBlog._id],
-    },
-    {
-      new: true,
-    }
-  );
+  req.blog = newBlog;
 
-  res.status(201).json({
-    status: 'success',
-    newBlog,
-    user,
-  });
+  next();
 };
 
 exports.deleteBlog = async (req, res) => {
@@ -65,10 +53,10 @@ exports.deleteBlog = async (req, res) => {
   if (req.user._id.toString() === blog.user._id.toString()) {
     await Blog.findByIdAndDelete(req.params.id);
 
-    const user = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       req.user._id,
       {
-        blogs: req.user.blogs.filter(id => id !== req.params.id),
+        blogs: req.user.blogs.filter(id => id.toString() !== req.params.id),
       },
       {
         new: true,
@@ -100,5 +88,30 @@ exports.updateBlog = async (req, res) => {
   res.status(200).json({
     status: 'success',
     data: updatedBlog,
+  });
+};
+
+exports.addComment = async (req, res) => {
+  const { comment } = req.body;
+
+  console.log(comment);
+
+  const blog = await Blog.findById(req.params.id);
+
+  if (!blog) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No document with that ID',
+    });
+  }
+
+  blog.comments.push(comment);
+
+  await blog.save();
+
+  res.status(200).json({
+    status: 'success',
+    comment,
+    message: `Comment: ${comment} added to the blog with title: ${blog.title}`,
   });
 };

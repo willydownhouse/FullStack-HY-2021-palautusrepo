@@ -13,7 +13,6 @@ export const login = (username, password) => async dispatch => {
       username,
       password,
     });
-    console.log(res.data);
 
     localStorage.setItem(
       'user',
@@ -118,6 +117,30 @@ export const likeABlog = (id, likes) => async dispatch => {
   dispatch({
     type: 'LIKE_A_BLOG',
     payload: res.data.data,
+  });
+};
+
+export const addComment = (id, comment) => async (dispatch, getState) => {
+  const token = getState().auth.token;
+
+  const res = await blogsApi.post(
+    `/api/blogs/${id}/comments`,
+    { comment },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  console.log(res.data);
+
+  dispatch({
+    type: 'COMMENT_A_BLOG',
+    payload: {
+      id,
+      comment: res.data.comment,
+    },
   });
 };
 

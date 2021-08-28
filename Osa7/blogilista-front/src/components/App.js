@@ -18,8 +18,6 @@ const App = () => {
   const formOpen = useSelector(state => state.createBlogFormOpen);
   let isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-  console.log('app rerender');
-
   let currentUser = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
@@ -30,8 +28,6 @@ const App = () => {
 
     dispatch(setCurrentUserFromLocalStorage(loggedInUser));
   }, []);
-
-  console.log('currentuser: ', currentUser, 'loggedIn:', isLoggedIn);
 
   return (
     <BrowserRouter>

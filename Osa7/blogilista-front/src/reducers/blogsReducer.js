@@ -10,6 +10,12 @@ const blogsReducer = (state = [], action) => {
       return state.map(blog =>
         blog.id !== action.payload.id ? blog : action.payload
       );
+    case 'COMMENT_A_BLOG':
+      return state.map(blog =>
+        blog.id !== action.payload.id
+          ? blog
+          : { ...blog, comments: [...blog.comments, action.payload.comment] }
+      );
 
     default:
       return state;

@@ -14,8 +14,6 @@ const BlogList = ({ user }) => {
 
   const blogs = useSelector(state => state.blogs);
 
-  console.log('bloglist rendered', blogs);
-
   const renderBlogs = () => {
     return blogs.map((blog, i) => {
       return (
