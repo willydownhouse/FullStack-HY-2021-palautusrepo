@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 2,
+    minlength: [2, "Book title must be at least 2 characters"],
   },
   published: {
     type: Number,

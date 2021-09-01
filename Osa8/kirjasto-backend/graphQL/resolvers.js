@@ -1,5 +1,8 @@
 const Book = require("../models/bookModel");
 const Author = require("../models/authorModel");
+const User = require("../models/userModel");
+const { UserInputError, AuthenticationError } = require("apollo-server");
+const jwt = require("jsonwebtoken");
 
 exports.resolvers = {
   Query: {
@@ -7,44 +10,145 @@ exports.resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       console.log(args);
-      return await Book.find({}).populate("author", { name: 1, born: 1 });
+      const { author, genre } = args;
+
+      if (author && genre) {
+        //tää kuntoon
+        return await Book.find();
+      }
+
+      if (author) {
+        //tää pitää viel korjaa
+        return await Book.find().populate("author");
+      }
+      if (genre) {
+        return await Book.find().where("genres").in(genre).populate("author");
+      }
+      return await Book.find().populate("author");
     },
 
     allAuthors: async () => await Author.find(),
+    me: (root, args, context) => {
+      return context.currentUser;
+    },
   },
 
-  // Author: {
-  //   bookCount: (root) =>
-  //     books
-  //       .map((book) => book.author === root.name)
-  //       .reduce((acc, val) => acc + val),
-  // },
-  // Mutation: {
-  //   addBook: (root, args) => {
-  //     const book = { ...args, id: uuid() };
-  //     books = books.concat(book);
+  Author: {
+    bookCount: async (root) => {
+      const result = await Book.find();
 
-  //     if (!authors.map((author) => author.name).includes(book.author)) {
-  //       authors = authors.concat({
-  //         name: book.author,
-  //         id: uuid(),
-  //       });
-  //     }
+      return result
+        .map((book) => book.author.toString() === root.id.toString())
+        .reduce((acc, val) => acc + val);
+    },
+  },
+  Mutation: {
+    addBook: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError(
+          "Please log in before executing this action"
+        );
+      }
+      const book = { ...args };
+      let newBook;
+      let newAuthor;
 
-  //     return book;
-  //   },
-  //   editAuthor: (root, args) => {
-  //     const { name, setBornTo } = args;
+      const author = await Author.findOne({ name: book.author });
 
-  //     const author = authors.find((a) => a.name === name);
+      if (!author) {
+        try {
+          newAuthor = await Author.create({
+            name: book.author,
+          });
+        } catch (err) {
+          throw new UserInputError(err.message, {
+            invalidArgs: book.author,
+          });
+        }
 
-  //     if (!author) return null;
+        try {
+          newBook = await Book.create({ ...args, author: newAuthor.id });
+        } catch (err) {
+          throw new UserInputError(err.message, {
+            invalidArgs: args,
+          });
+        }
+      } else {
+        try {
+          newBook = await Book.create({
+            ...args,
+            author: author.id,
+          });
+        } catch (err) {
+          throw new UserInputError(err.message, {
+            invalidArgs: args,
+          });
+        }
+      }
 
-  //     const updatedAuthor = { ...author, born: setBornTo };
+      return newBook;
+    },
+    editAuthor: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError(
+          "Please log in before executing this action"
+        );
+      }
+      const { name, setBornTo } = args;
 
-  //     authors = authors.filter((a) => a.id !== author.id).concat(updatedAuthor);
+      const author = await Author.findOne({ name });
 
-  //     return updatedAuthor;
-  //   },
-  // },
+      if (!author) return null;
+
+      author.born = setBornTo;
+
+      try {
+        await author.save();
+      } catch (err) {
+        throw new UserInputError(err.message, {
+          invalidArgs: args,
+        });
+      }
+
+      return author;
+    },
+    createUser: async (root, args) => {
+      const user = new User({ ...args });
+
+      try {
+        await user.save();
+      } catch (err) {
+        throw new UserInputError(err.message, {
+          invalidArgs: args,
+        });
+      }
+
+      return user;
+    },
+
+    login: async (root, args) => {
+      const { username, password } = args;
+
+      const user = await User.findOne({ username }).select("+password");
+
+      if (
+        !user ||
+        !(await user.checkCorrectPassword(password, user.password))
+      ) {
+        throw new UserInputError("Wrong username or password");
+      }
+
+      const token = jwt.sign(
+        {
+          id: user._id,
+          username: user.username,
+        },
+        process.env.JWT_SECRET
+      );
+
+      return {
+        value: token,
+      };
+    },
+  },
 };
