@@ -2,18 +2,39 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
 
-const NewBook = (props) => {
+const NewBook = ({ show, setNotification }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
+  const refetchQueryArray = () => {
+    const arr = genres.map((genre) => {
+      return {
+        query: ALL_BOOKS,
+        variables: { genre },
+      };
+    });
+
+    return [
+      { query: ALL_BOOKS, variables: { genre: null } },
+      ...arr,
+      { query: ALL_AUTHORS },
+    ];
+  };
+
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [ALL_BOOKS, ALL_AUTHORS],
+    refetchQueries: refetchQueryArray(),
+    onError: (err) => {
+      setNotification(err.message);
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    },
   });
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 

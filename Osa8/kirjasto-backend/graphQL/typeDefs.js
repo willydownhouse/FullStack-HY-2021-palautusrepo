@@ -10,6 +10,8 @@ exports.typeDefs = gql`
 
   type Token {
     value: String!
+    user: ID
+    favoriteGenre: String
   }
   type Book {
     title: String!

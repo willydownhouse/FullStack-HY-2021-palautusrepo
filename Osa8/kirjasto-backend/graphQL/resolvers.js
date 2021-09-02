@@ -9,7 +9,6 @@ exports.resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      console.log(args);
       const { author, genre } = args;
 
       if (author && genre) {
@@ -89,12 +88,15 @@ exports.resolvers = {
       return newBook;
     },
     editAuthor: async (root, args, context) => {
+      console.log("halloo");
       if (!context.currentUser) {
         throw new AuthenticationError(
           "Please log in before executing this action"
         );
       }
       const { name, setBornTo } = args;
+
+      console.log(name, setBornTo);
 
       const author = await Author.findOne({ name });
 
@@ -148,6 +150,8 @@ exports.resolvers = {
 
       return {
         value: token,
+        user: user._id,
+        favoriteGenre: user.favoriteGenre,
       };
     },
   },
