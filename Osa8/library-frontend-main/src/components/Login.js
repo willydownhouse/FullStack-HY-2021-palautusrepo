@@ -27,6 +27,10 @@ function Login({ show, setNotification, setLoggedIn, setCurrentUser }) {
       setCurrentUser(user);
       setUsername("");
       setPassword("");
+      setNotification("Succesfully logged in!");
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     }
   }, [result.data]);
 

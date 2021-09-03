@@ -38,6 +38,7 @@ const server = new ApolloServer({
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`App listening port ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });

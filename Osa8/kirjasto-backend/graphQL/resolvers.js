@@ -1,8 +1,14 @@
 const Book = require("../models/bookModel");
 const Author = require("../models/authorModel");
 const User = require("../models/userModel");
-const { UserInputError, AuthenticationError } = require("apollo-server");
+const {
+  UserInputError,
+  AuthenticationError,
+  PubSub,
+} = require("apollo-server");
 const jwt = require("jsonwebtoken");
+
+const pubsub = new PubSub();
 
 exports.resolvers = {
   Query: {
@@ -12,13 +18,18 @@ exports.resolvers = {
       const { author, genre } = args;
 
       if (author && genre) {
-        //tää kuntoon
-        return await Book.find();
+        const auth = await Author.findOne({ name: author });
+
+        return await Book.find({ author: auth._id })
+          .where("genres")
+          .in(genre)
+          .populate("author");
       }
 
       if (author) {
-        //tää pitää viel korjaa
-        return await Book.find().populate("author");
+        const auth = await Author.findOne({ name: author });
+
+        return await Book.find({ author: auth._id }).populate("author");
       }
       if (genre) {
         return await Book.find().where("genres").in(genre).populate("author");
@@ -33,13 +44,7 @@ exports.resolvers = {
   },
 
   Author: {
-    bookCount: async (root) => {
-      const result = await Book.find();
-
-      return result
-        .map((book) => book.author.toString() === root.id.toString())
-        .reduce((acc, val) => acc + val);
-    },
+    bookCount: (root) => root.books.length,
   },
   Mutation: {
     addBook: async (root, args, context) => {
@@ -52,8 +57,10 @@ exports.resolvers = {
       let newBook;
       let newAuthor;
 
+      //IF AUTHOR EXISTS
       const author = await Author.findOne({ name: book.author });
 
+      //AUTHOR DOES NOT EXIST -> CREATE NEW AUTHOR
       if (!author) {
         try {
           newAuthor = await Author.create({
@@ -64,7 +71,7 @@ exports.resolvers = {
             invalidArgs: book.author,
           });
         }
-
+        //AFTER NEW AUTHOR -> NEW BOOK
         try {
           newBook = await Book.create({ ...args, author: newAuthor.id });
         } catch (err) {
@@ -72,18 +79,36 @@ exports.resolvers = {
             invalidArgs: args,
           });
         }
+        //UPDATE NEW AUTHOR books -> WITH NEWBOOK ID
+        try {
+          const a = await Author.findById(newAuthor._id);
+
+          a.books = [newBook._id];
+
+          await a.save();
+        } catch (err) {
+          console.log(err.message);
+        }
+        // AUTHOR ALREADY EXISTS
       } else {
         try {
           newBook = await Book.create({
             ...args,
             author: author.id,
           });
+
+          // UPDATE AUTHORS BOOKS ARRAY
+          author.books = [...author.books, newBook._id];
+
+          await author.save();
         } catch (err) {
           throw new UserInputError(err.message, {
             invalidArgs: args,
           });
         }
       }
+
+      pubsub.publish("BOOK_ADDED", { bookAdded: newBook });
 
       return newBook;
     },
@@ -153,6 +178,11 @@ exports.resolvers = {
         user: user._id,
         favoriteGenre: user.favoriteGenre,
       };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
 };

@@ -5,12 +5,26 @@ import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
 import Recommend from "./components/Recommend";
+import { BOOK_ADDED } from "./queries";
+import { useSubscription } from "@apollo/client";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [notification, setNotification] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+
+      window.alert(
+        `${subscriptionData.data.bookAdded.title} added to the books list`
+      );
+
+      //window.location.reload();
+    },
+  });
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -20,18 +34,16 @@ const App = () => {
     token ? setLoggedIn(true) : setLoggedIn(false);
   }, []);
 
-  console.log(currentUser);
-
   return (
     <div>
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         {loggedIn ? (
-          <button onClick={() => setPage("add")}>add book</button>
-        ) : null}
-        {loggedIn ? (
-          <button onClick={() => setPage("recommend")}>recommend</button>
+          <>
+            <button onClick={() => setPage("add")}>add book</button>
+            <button onClick={() => setPage("recommend")}>recommend</button>
+          </>
         ) : null}
 
         <button
@@ -57,12 +69,14 @@ const App = () => {
         <Recommend currentUser={currentUser} show={page === "recommend"} />
       ) : null}
 
-      <Login
-        show={page === "login"}
-        setNotification={setNotification}
-        setLoggedIn={setLoggedIn}
-        setCurrentUser={setCurrentUser}
-      />
+      {loggedIn ? null : (
+        <Login
+          show={page === "login"}
+          setNotification={setNotification}
+          setLoggedIn={setLoggedIn}
+          setCurrentUser={setCurrentUser}
+        />
+      )}
     </div>
   );
 };
