@@ -13,8 +13,6 @@ function Recommend({ show, currentUser }) {
     return <div>Loading...</div>;
   }
 
-  console.log(result.data);
-
   return (
     <div>
       <h3>Recommendations</h3>

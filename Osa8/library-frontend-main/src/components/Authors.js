@@ -23,6 +23,8 @@ const Authors = ({ show, loggedIn }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!selectedOption) return;
+
     const { value } = selectedOption;
 
     editBorn({

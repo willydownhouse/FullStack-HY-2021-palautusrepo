@@ -113,15 +113,12 @@ exports.resolvers = {
       return newBook;
     },
     editAuthor: async (root, args, context) => {
-      console.log("halloo");
       if (!context.currentUser) {
         throw new AuthenticationError(
           "Please log in before executing this action"
         );
       }
       const { name, setBornTo } = args;
-
-      console.log(name, setBornTo);
 
       const author = await Author.findOne({ name });
 
