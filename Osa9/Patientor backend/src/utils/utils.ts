@@ -3,20 +3,34 @@ import { Gender } from "./types";
 
 import { v1 as uuid } from "uuid";
 
-export const toNewPatient = (object: any): Patient => {
+type Fields = {
+  name: unknown;
+  dateOfBirth: unknown;
+  ssn: unknown;
+  gender: unknown;
+  occupation: unknown;
+};
+
+export const toNewPatient = ({
+  name,
+  dateOfBirth,
+  ssn,
+  gender,
+  occupation,
+}: Fields): Patient => {
   const id = uuid();
 
   const newPatient = {
     id,
-    name: parseName(object.name),
-    dateOfBirth: parseDate(object.dateOfBirth),
-    ssn: parseSsn(object.ssn),
-    gender: parseGender(object.gender),
-    occupation: parseOccupation(object.occupation),
+    name: parseName(name),
+    dateOfBirth: parseDate(dateOfBirth),
+    ssn: parseSsn(ssn),
+    gender: parseGender(gender),
+    occupation: parseOccupation(occupation),
   };
   return newPatient;
 };
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (param: any): param is Gender => {
   return Object.values(Gender).includes(param);
 };

@@ -13,6 +13,7 @@ router.post("/", (req, res) => {
     const patient = toNewPatient(req.body);
 
     res.send(patientServices.createPatient(patient));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(400).send(err.message);
   }
