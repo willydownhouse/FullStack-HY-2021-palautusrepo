@@ -114,8 +114,6 @@ const Part = ({ course }: { course: CoursePart }) => {
     });
   };
 
-  console.log(course);
-
   switch (course.type) {
     case "normal":
       return (
@@ -135,7 +133,6 @@ const Part = ({ course }: { course: CoursePart }) => {
     case "submission":
       return (
         <div>
-          {}
           {renderNameAndExerciseCount()}
           <p>{course.description}</p>
           <p>{course.exerciseSubmissionLink}</p>

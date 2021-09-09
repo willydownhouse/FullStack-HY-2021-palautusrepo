@@ -1,4 +1,5 @@
-import patientData from "../../data/patients.json";
+//import patientData from "../../data/patients.json";
+import { patientData } from "../../data/patients";
 import { NonSensitivePatient, Patient } from "../utils/types";
 
 const getAllPatients = (): Patient[] => {
@@ -17,6 +18,12 @@ const getAllPatientsNonSensitive = (): NonSensitivePatient[] => {
   });
 };
 
+const getOnePatient = (id: string): Patient | undefined => {
+  const patient = patientData.find((ob) => ob.id === id);
+
+  return patient;
+};
+
 const createPatient = (patient: Patient): NonSensitivePatient => {
   patientData.concat(patient);
 
@@ -27,4 +34,5 @@ export default {
   getAllPatients,
   getAllPatientsNonSensitive,
   createPatient,
+  getOnePatient,
 };

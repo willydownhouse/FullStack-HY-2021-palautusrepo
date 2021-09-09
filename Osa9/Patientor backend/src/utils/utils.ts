@@ -76,3 +76,7 @@ const parseOccupation = (str: unknown): string => {
   }
   return str;
 };
+
+// const parseEntries = (arr: unknown[]): Entry[] | [] => {
+//   return [];
+// };
