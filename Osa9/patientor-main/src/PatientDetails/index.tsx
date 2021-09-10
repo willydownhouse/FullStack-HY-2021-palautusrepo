@@ -2,9 +2,10 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import { apiBaseUrl } from "../constants";
-import { useStateValue, setPatientDetails } from "../state";
-import { Patient } from "../types";
-import { Divider, Icon } from "semantic-ui-react";
+import { useStateValue, setPatientDetails, setDiagnoses } from "../state";
+import { Patient, Diagnose } from "../types";
+import { Divider, Icon, List } from "semantic-ui-react";
+import PatientEntries from "../components/PatientEntries";
 
 function PatientDetails() {
   const [state, dispatch] = useStateValue();
@@ -19,6 +20,15 @@ function PatientDetails() {
     });
   }, []);
 
+  useEffect(() => {
+    void axios.get<Diagnose[]>(`${apiBaseUrl}/diagnoses`).then((res) => {
+      dispatch(setDiagnoses(res.data));
+    });
+  }, []);
+
+  console.log(patient);
+  console.log(state.diagnoses);
+
   if (!patient) {
     return <div>Loading...</div>;
   }
@@ -32,6 +42,11 @@ function PatientDetails() {
       <Divider hidden />
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
+      <Divider hidden />
+      <h4>entries</h4>
+      <List divided relaxed>
+        <PatientEntries entries={patient.entries} />
+      </List>
     </div>
   );
 }
