@@ -1,4 +1,4 @@
-import { Patient } from "./types";
+import { Patient, Entry } from "./types";
 import { Gender } from "./types";
 
 import { v1 as uuid } from "uuid";
@@ -22,7 +22,7 @@ export const toNewPatient = ({
 
   const newPatient = {
     id,
-    name: parseName(name),
+    name: parseString(name),
     dateOfBirth: parseDate(dateOfBirth),
     ssn: parseSsn(ssn),
     gender: parseGender(gender),
@@ -47,11 +47,11 @@ const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
 };
 
-const parseName = (name: unknown): string => {
-  if (!name || !isString(name)) {
-    throw new Error("Incorrect or missing name");
+const parseString = (val: unknown): string => {
+  if (!val || !isString(val)) {
+    throw new Error(`Incorrect or missing ${val}`);
   }
-  return name;
+  return val;
 };
 
 const isDate = (date: string): boolean => {
@@ -78,6 +78,81 @@ const parseOccupation = (str: unknown): string => {
   return str;
 };
 
-// const parseEntries = (arr: unknown[]): Entry[] | [] => {
-//   return [];
-// };
+export const toNewEntry = ({
+  type,
+  description,
+  date,
+  specialist,
+  diagnosisCodes,
+  healthCheckRating,
+  employerName,
+  sickLeave,
+  discharge,
+}: {
+  type: any;
+  description: any;
+  date: any;
+  specialist: any;
+  diagnosisCodes: any;
+  healthCheckRating: any;
+  employerName: any;
+  sickLeave: any;
+  discharge: any;
+}): Entry | Error => {
+  if (!type || !description || !date || !specialist) {
+    return new Error(
+      "Entry needs to have at least type, description, date and specialist fields."
+    );
+  }
+  const id = uuid();
+
+  const newEntry = {
+    id,
+    type,
+    description,
+    date,
+    specialist,
+    diagnosisCodes,
+  };
+
+  switch (type) {
+    case "Hospital":
+      if (!discharge || !discharge.date || !discharge.criteria) {
+        return new Error(
+          "Entry type 'Hospital' must have a field discharge with subfields  date and criteria"
+        );
+      }
+      return {
+        ...newEntry,
+        discharge,
+      };
+    case "HealthCheck":
+      if (!healthCheckRating) {
+        return new Error(
+          "Entry type 'HealhCheck' must have a field healthCheckRating"
+        );
+      }
+      return {
+        ...newEntry,
+        healthCheckRating,
+      };
+    case "OccupationalHealthcare":
+      if (
+        !employerName ||
+        !sickLeave ||
+        !sickLeave.startDate ||
+        !sickLeave.endDate
+      ) {
+        return new Error(
+          "Entry type 'OccupationalHealthcare' must have a field employerName and sickLeave with subfields  startDate and endDate"
+        );
+      }
+      return {
+        ...newEntry,
+        employerName,
+        sickLeave,
+      };
+    default:
+      return new Error("No such  Entry type");
+  }
+};

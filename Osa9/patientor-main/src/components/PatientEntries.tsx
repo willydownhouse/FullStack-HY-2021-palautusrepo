@@ -9,6 +9,12 @@ import {
 } from "semantic-ui-react";
 import { useStateValue } from "../state";
 
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
 const PatientEntries = ({ entries }: { entries: Entry[] }) => {
   const [state] = useStateValue();
 
@@ -81,7 +87,7 @@ const PatientEntries = ({ entries }: { entries: Entry[] }) => {
             </ListItem>
           );
         default:
-          return <div>Haloo</div>;
+          return assertNever(entry);
       }
     });
   };

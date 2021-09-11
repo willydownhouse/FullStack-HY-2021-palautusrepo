@@ -1,6 +1,6 @@
 //import patientData from "../../data/patients.json";
 import { patientData } from "../../data/patients";
-import { NonSensitivePatient, Patient } from "../utils/types";
+import { NonSensitivePatient, Patient, Entry } from "../utils/types";
 
 const getAllPatients = (): Patient[] => {
   return patientData;
@@ -30,9 +30,23 @@ const createPatient = (patient: Patient): NonSensitivePatient => {
   return patient;
 };
 
+const addEntryToPatientEntries = (patient: Patient, entry: Entry) => {
+  const updatedPatient = {
+    ...patient,
+    entries: [...patient.entries, entry],
+  };
+
+  const a = patientData.map((patient) =>
+    patient.id === updatedPatient.id ? updatedPatient : patient
+  );
+
+  console.log(a);
+};
+
 export default {
   getAllPatients,
   getAllPatientsNonSensitive,
   createPatient,
   getOnePatient,
+  addEntryToPatientEntries,
 };

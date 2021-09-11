@@ -53,10 +53,8 @@ interface HospitalEntry extends BaseEntry {
 }
 
 export type Entry =
-  | BaseEntry
-  | HealthCheckEntry
-  | HospitalEntry
-  | OccupationalHealthcareEntry;
+  //| BaseEntry
+  HealthCheckEntry | HospitalEntry | OccupationalHealthcareEntry;
 
 export enum HealthCheckRating {
   "Healthy" = 0,

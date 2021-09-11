@@ -6,11 +6,16 @@ import { useStateValue, setPatientDetails, setDiagnoses } from "../state";
 import { Patient, Diagnose } from "../types";
 import { Divider, Icon, List } from "semantic-ui-react";
 import PatientEntries from "../components/PatientEntries";
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function isEmpty(obj: any) {
+  return Object.keys(obj).length === 0;
+}
 
 function PatientDetails() {
   const [state, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
   const patient = state.patientDetails[id];
+  const diagnoses = state.diagnoses;
 
   useEffect(() => {
     if (patient) return;
@@ -21,13 +26,14 @@ function PatientDetails() {
   }, []);
 
   useEffect(() => {
+    if (!isEmpty(diagnoses)) return;
+
     void axios.get<Diagnose[]>(`${apiBaseUrl}/diagnoses`).then((res) => {
       dispatch(setDiagnoses(res.data));
     });
   }, []);
 
-  console.log(patient);
-  console.log(state.diagnoses);
+  console.log(state);
 
   if (!patient) {
     return <div>Loading...</div>;
