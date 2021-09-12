@@ -9,6 +9,11 @@ export type GenderOption = {
   label: string;
 };
 
+export type EntryTypeOption = {
+  label: string;
+  value: string;
+};
+
 // props for select field component
 type SelectFieldProps = {
   name: string;

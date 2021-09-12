@@ -1,11 +1,15 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { apiBaseUrl } from "../constants";
 import { useStateValue, setPatientDetails, setDiagnoses } from "../state";
 import { Patient, Diagnose } from "../types";
-import { Divider, Icon, List } from "semantic-ui-react";
+import { Divider, Icon, List, Button } from "semantic-ui-react";
 import PatientEntries from "../components/PatientEntries";
+import AddEntryModal from "../AddEntryModal";
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+
+//import AddPatientModal from "../AddPatientModal";
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function isEmpty(obj: any) {
   return Object.keys(obj).length === 0;
@@ -16,6 +20,21 @@ function PatientDetails() {
   const { id } = useParams<{ id: string }>();
   const patient = state.patientDetails[id];
   const diagnoses = state.diagnoses;
+
+  //Modal
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const openModal = (): void => {
+    setModalOpen(true);
+  };
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+  };
+
+  const onFormSubmit = (values: EntryFormValues) => {
+    console.log(values);
+  };
 
   useEffect(() => {
     if (patient) return;
@@ -41,6 +60,12 @@ function PatientDetails() {
 
   return (
     <div>
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onClose={closeModal}
+        onSubmit={onFormSubmit}
+      />
+      <Button onClick={() => openModal()}>Add entry</Button>
       <h3>
         {patient.name}{" "}
         <Icon name={patient.gender === "male" ? "mars" : "venus"} />
