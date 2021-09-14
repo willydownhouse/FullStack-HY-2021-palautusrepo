@@ -2,8 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { apiBaseUrl } from "../constants";
-import { useStateValue, setPatientDetails, setDiagnoses } from "../state";
-import { Patient, Diagnose } from "../types";
+import {
+  useStateValue,
+  setPatientDetails,
+  setDiagnoses,
+  setPatientEntries,
+} from "../state";
+import { Patient, Diagnose, Entry } from "../types";
 import { Divider, Icon, List, Button } from "semantic-ui-react";
 import PatientEntries from "../components/PatientEntries";
 import AddEntryModal from "../AddEntryModal";
@@ -32,8 +37,19 @@ function PatientDetails() {
     setModalOpen(false);
   };
 
-  const onFormSubmit = (values: EntryFormValues) => {
-    console.log(values);
+  const onFormSubmit = async (values: EntryFormValues) => {
+    try {
+      await axios
+        .post<Entry>(`${apiBaseUrl}/patients/${patient.id}/entries`, values)
+        .then((res) => {
+          console.log("action dispatched with this data:");
+          console.log(res.data);
+          dispatch(setPatientEntries(patient.id, res.data));
+          closeModal();
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -51,8 +67,6 @@ function PatientDetails() {
       dispatch(setDiagnoses(res.data));
     });
   }, []);
-
-  console.log(state);
 
   if (!patient) {
     return <div>Loading...</div>;

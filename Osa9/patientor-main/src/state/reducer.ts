@@ -1,7 +1,5 @@
 import { State } from "./state";
-import { Patient, Diagnose } from "../types";
-//import { ModalActions } from "semantic-ui-react";
-//import { StateContext } from ".";
+import { Patient, Diagnose, Entry } from "../types";
 
 export type Action =
   | {
@@ -19,6 +17,13 @@ export type Action =
   | {
       type: "SET_DIAGNOSE";
       payload: Diagnose[];
+    }
+  | {
+      type: "ADD_ENTRY";
+      payload: {
+        entry: Entry;
+        patientId: string;
+      };
     };
 
 export const reducer = (state: State, action: Action): State => {
@@ -62,6 +67,23 @@ export const reducer = (state: State, action: Action): State => {
           ...state.diagnoses,
         },
       };
+    case "ADD_ENTRY":
+      const updatedPatient = {
+        ...state.patientDetails[action.payload.patientId],
+      };
+
+      updatedPatient.entries = [
+        ...updatedPatient.entries,
+        action.payload.entry,
+      ];
+
+      return {
+        ...state,
+        patientDetails: {
+          ...state.patientDetails,
+          [action.payload.patientId]: updatedPatient,
+        },
+      };
     default:
       return state;
   }
@@ -85,5 +107,15 @@ export const setDiagnoses = (data: Diagnose[]): Action => {
   return {
     type: "SET_DIAGNOSE",
     payload: data,
+  };
+};
+
+export const setPatientEntries = (patientId: string, data: Entry): Action => {
+  return {
+    type: "ADD_ENTRY",
+    payload: {
+      patientId,
+      entry: data,
+    },
   };
 };

@@ -1,14 +1,16 @@
 import { Formik, Form, Field } from "formik";
-import { TextField } from "../AddPatientModal/FormField";
+
 import React from "react";
-import { Button, Grid, FormField } from "semantic-ui-react";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
+import { Button, Divider, Grid } from "semantic-ui-react";
+import {
+  DiagnosisSelection,
+  NumberField,
+  TextField,
+} from "../AddPatientModal/FormField";
 import { useStateValue } from "../state";
-import { Entry } from "../types";
+import { HealthCheckEntry, HealthCheckRating } from "../types";
 
-export type EntryFormValues = Omit<Entry, "id">;
-
-const entryOptions = ["HealthCheck", "OccupationalHealthcare", "Hospital"];
+export type EntryFormValues = Omit<HealthCheckEntry, "id">;
 
 interface Props {
   onSubmit: (values: EntryFormValues) => void;
@@ -25,22 +27,29 @@ function AddEntryForm({ onCancel, onSubmit }: Props) {
           date: "",
           description: "",
           specialist: "",
+          healthCheckRating: HealthCheckRating.Healthy,
         }}
         onSubmit={onSubmit}
         validate={(values) => {
           const requiredError = "Field is required";
+
           const errors: { [field: string]: string } = {};
+
           if (!values.type) {
             errors.name = requiredError;
           }
           if (!values.date) {
-            errors.ssn = requiredError;
+            errors.date = requiredError;
           }
+
           if (!values.description) {
             errors.description = requiredError;
           }
           if (!values.specialist) {
             errors.specialist = requiredError;
+          }
+          if (!values.healthCheckRating) {
+            errors.healthCheckRating = requiredError;
           }
 
           return errors;
@@ -49,34 +58,15 @@ function AddEntryForm({ onCancel, onSubmit }: Props) {
         {({ dirty, isValid, setFieldValue, setFieldTouched }) => {
           return (
             <Form className="form ui">
-              <FormField>
-                <label>Type</label>
-                <Field as="select" name="type" className="ui dropdown">
-                  {entryOptions.map((op) => {
-                    return (
-                      <option key={op} value={op}>
-                        {op}
-                      </option>
-                    );
-                  })}
-                </Field>
-              </FormField>
+              <label>Type</label>
+              <Field as="select" name="type">
+                <option value="HealthCheck">HealthCheck</option>
+              </Field>
 
-              <DiagnosisSelection
-                setFieldValue={setFieldValue}
-                setFieldTouched={setFieldTouched}
-                diagnoses={Object.values(diagnoses)}
-              />
               <Field
                 label="Date"
-                placeholder="Date"
+                placeholder="YYYY-MM-DD"
                 name="date"
-                component={TextField}
-              />
-              <Field
-                label="Description"
-                placeholder="Description"
-                name="description"
                 component={TextField}
               />
               <Field
@@ -85,7 +75,28 @@ function AddEntryForm({ onCancel, onSubmit }: Props) {
                 name="specialist"
                 component={TextField}
               />
+              <Field
+                label="Description"
+                placeholder="Description"
+                name="description"
+                component={TextField}
+              />
 
+              <DiagnosisSelection
+                setFieldValue={setFieldValue}
+                setFieldTouched={setFieldTouched}
+                diagnoses={Object.values(diagnoses)}
+              />
+
+              <Field
+                label="healthCheckRating"
+                name="healthCheckRating"
+                component={NumberField}
+                min={0}
+                max={3}
+              />
+
+              <Divider hidden />
               <Grid>
                 <Grid.Column floated="left" width={5}>
                   <Button type="button" onClick={onCancel} color="red">
