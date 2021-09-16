@@ -52,6 +52,10 @@ function AddEntryForm({ onCancel, onSubmit }: Props) {
             errors.healthCheckRating = requiredError;
           }
 
+          if (!Date.parse(values.date)) {
+            errors.date = "Not a valid date";
+          }
+
           return errors;
         }}
       >
