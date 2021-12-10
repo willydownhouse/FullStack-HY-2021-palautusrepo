@@ -6,12 +6,10 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node . .
 
-RUN npm install nodemon
-
-RUN npm install
+RUN npm ci --only-production
 
 ENV DEBUG=blogilista:*
 
-CMD npm run dev-cont
+CMD npm start
 
 EXPOSE 3001

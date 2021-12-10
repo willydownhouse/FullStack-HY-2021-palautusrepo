@@ -10,27 +10,27 @@ services:
     container_name: reverse-proxy
 
   blogi-back:
-    image: blogilista-backend-dev
+    image: blogilista-backend-prod
     build:
       context: ./blogilista
-      dockerfile: ./blogilista/dev.Dockerfile
+      dockerfile: ./blogilista/Dockerfile
     volumes:
       - ./blogilista:/usr/src/app
       - /usr/src/app/node_modules/
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     ports:
       - 3001:3001
 
   blogi-front:
-    image: blogilista-frontend-dev
+    image: blogilista-frontend-prod
     build:
       context: ./blogilista-front
-      dockerfile: ./blogilista-front/dev.Dockerfile
+      dockerfile: ./blogilista-front/Dockerfile
     volumes:
       - ./blogilista-front:/usr/src/app
     ports:
-      - 3000:3000
+      - 3000:80
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:3001
       - CHOKIDAR_USEPOLLING=true
